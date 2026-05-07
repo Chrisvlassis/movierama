@@ -1,0 +1,3 @@
+fastapi==0.115.0 # web framework
+uvicorn==0.30.0 # server
+psycopg2-binary==2.9.9 # PostgreSQL driver

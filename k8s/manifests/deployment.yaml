@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movierama-app
+  namespace: movierama
+  labels:
+    app: movierama-app
+spec:
+  # run 1 copy of the app
+  replicas: 1
+  
+  selector:
+    matchLabels:
+      app: movierama-app
+  
+  template:
+    metadata:
+      labels:
+        app: movierama-app
+    
+    spec:
+      containers:
+        - name: movierama-app
+          image: movierama-app:latest
+          imagePullPolicy: Never  # use local image, don't pull from internet
+          
+          ports:
+            - containerPort: 8000
+          
+          # inject environment variables from our configmap
+          envFrom:
+            - configMapRef:
+                name: movierama-app-config
+          
+          # inject DB password from our existing secret
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-password
+          
+          # health check - is the app alive?. Like a heartbeat.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10  # wait 10s before first check
+            periodSeconds: 10        # check every 10s
+          
+          # readiness check - can the app serve traffic?
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 10  # wait 10s before first check
+            periodSeconds: 10        # check every 10s

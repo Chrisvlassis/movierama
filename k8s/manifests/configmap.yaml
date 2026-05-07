@@ -1,0 +1,16 @@
+# a simple configmap for the app to connect to the database so we dont have to hardcode the values in the app
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # name of the configmap
+  name: movierama-app-config
+  # same namespace as our databases
+  namespace: movierama
+data:
+  # database connection details
+  # these will be injected as environment variables into the app pod
+  DB_HOST: "postgres-primary.movierama.svc.cluster.local"
+  DB_PORT: "5432"
+  DB_NAME: "movierama"
+  DB_USER: "movierama"
+  # no need for password as it is stored in the secret in the postgres-secret

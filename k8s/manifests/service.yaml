@@ -1,0 +1,22 @@
+# a simple service to expose the app to the outside world
+apiVersion: v1
+kind: Service
+metadata:
+  name: movierama-app
+  namespace: movierama
+  labels:
+    app: movierama-app
+spec:
+  # NodePort exposes the app on a port on your Mac
+  # so you can access it from your browser
+  type: NodePort
+
+  selector:
+    # find pods with this label
+    app: movierama-app
+
+  ports:
+    - name: http
+      port: 80          # port inside the cluster
+      targetPort: 8000  # port our app listens on
+      nodePort: 30080   # port on your Mac to access the app

@@ -1,0 +1,11 @@
+movie_id,title,genre,release_date,cast
+1,Inception,Sci-Fi,2010-07-16,"Leonardo DiCaprio,Joseph Gordon-Levitt"
+2,The Godfather,Drama,1972-03-24,"Marlon Brando,Al Pacino"
+3,The Dark Knight,Action,2008-07-18,"Christian Bale,Heath Ledger"
+4,Pulp Fiction,Crime,1994-10-14,"John Travolta,Samuel L. Jackson"
+5,Forrest Gump,Drama,1994-07-06,"Tom Hanks,Robin Wright"
+6,The Matrix,Sci-Fi,1999-03-31,"Keanu Reeves,Laurence Fishburne"
+7,Interstellar,Sci-Fi,2014-11-07,"Matthew McConaughey,Anne Hathaway"
+8,Goodfellas,Crime,1990-09-19,"Robert De Niro,Ray Liotta"
+9,The Shawshank Redemption,Drama,1994-09-23,"Tim Robbins,Morgan Freeman"
+10,Fight Club,Drama,1999-10-15,"Brad Pitt,Edward Norton"
