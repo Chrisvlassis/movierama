@@ -201,7 +201,7 @@ The pipeline handles schema evolution gracefully:
 - **Column goes missing** → logged as warning, filled with null
 - **Wrong data type** → record quarantined with reason
 
-**Alternative approach:** Instead of ignoring or filling missing columns, another strategy would be to dynamically adapt the pipeline on every run — read the incoming schema first, compare it against the expected schema, and automatically update the pipeline's schema definition to reflect the new structure. This would allow the pipeline to fully embrace schema changes rather than just tolerating them, at the cost of less predictability in downstream outputs. But, this could create issues in case of changes in the schema that effect the needs of the end producton (for example: someone has ran a select * from in the end table and the data are being used)
+**Alternative approach:** Instead of ignoring or filling missing columns, another strategy would be to dynamically adapt the pipeline on every run — read the incoming schema first, compare it against the expected schema, and automatically update the pipeline's schema definition to reflect the new structure. This would allow the pipeline to fully embrace schema changes rather than just tolerating them, at the cost of less predictability in downstream outputs. A solution would be using a glue crawler. 
 
 ### Design Decisions
 - Read all data as **strings first** then validate types — prevents silent failures
