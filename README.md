@@ -39,6 +39,15 @@ postgres-replica-0  → read-only, streams changes from primary
 
 ### Setup
 
+**Extra Note: Before running minikube pull the postgress image & load it to minikube**
+```bash
+docker pull postgres:15
+```
+```bash
+minikube image load postgres:15
+```
+
+
 **1. Start Minikube:**
 ```bash
 minikube start
