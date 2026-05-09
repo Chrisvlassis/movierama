@@ -199,12 +199,11 @@ docker run movierama-etl pytest tests/test_validation.py -v
 Tests cover:
 - Valid records pass through correctly
 - Invalid types (integer, float, date, timestamp) are quarantined
-- Null values are handled as valid business data
 - Multiple invalid fields captured in quarantine reason
 - Schema evolution: new columns ignored, missing columns filled with null
 - Edge cases: empty DataFrame, all invalid records
 
-> **Note:** Given more time, we would add unit tests for `extract.py` and `transform.py` as well, covering schema evolution handling, cast operations, and SparkSQL transformations. We would also add more data quality validations such as rating range checks (0-5), duplicate detection, and referential integrity between movies and ratings.
+> **Note:** Given more time we would also add more data quality validations such as rating range checks (0-5), duplicate detection, and referential integrity between movies and ratings.
 
 ### Schema Evolution
 The pipeline handles schema evolution gracefully:
