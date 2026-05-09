@@ -63,14 +63,14 @@ resource "kubernetes_stateful_set" "postgres_replica" {
               set -euo pipefail
 
               # Wait until the primary is accepting connections
-              until pg_isready -h postgres-primary.movierama.svc.cluster.local -p 5432; do
+              until pg_isready -h postgres-primary.movierama.svc.cluster.local -p 5432; do # Very IMPORTANT to wait for the primary to be ready otherwise it will fail!!
                 echo "Waiting for primary to be ready..."
                 sleep 2
               done
 
               echo "Primary is ready. Starting base backup..."
 
-              # Clear the data directory before copying
+              # Clear the data directory before copying (i had an error about that so i removed it)
               rm -rf /var/lib/postgresql/data/*
 
               # Copy all data from primary

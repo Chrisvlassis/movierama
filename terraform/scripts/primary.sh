@@ -4,7 +4,7 @@ set -e
 # ── Step 1: Load pg_hba.conf ──────────────────────────────────────────────────
 # pg_hba.conf controls who can connect to PostgreSQL and how they authenticate.
 # The ConfigMap is mounted as read-only so we copy it into PGDATA where
-# PostgreSQL expects to find it.
+# PostgreSQL expects to find it. (i was getting an error without this)
 echo "Loading pg_hba.conf..."
 cp /mnt/pg_hba.conf "$PGDATA/pg_hba.conf"
 

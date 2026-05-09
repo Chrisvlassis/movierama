@@ -23,6 +23,8 @@ output "database_user" {
   value       = var.postgres_user
 }
 
+# should i add the replica user also?
+
 output "database_port" {
   description = "PostgreSQL port"
   value       = 5432
