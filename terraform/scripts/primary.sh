@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
-# Writable copy: ConfigMap at /mnt is read-only and must not live under PGDATA (chown fails).
+
+# --------------- Step 1: Load pg_hba.conf ----------------------------- #
+# pg_hba.conf controls who can connect and how they authenticate.
+# The ConfigMap is read-only so we copy it into PGDATA where PostgreSQL expects it.
 cp /mnt/pg_hba.conf "$PGDATA/pg_hba.conf"
 
-## Configures the replication settings for the primary database
+# --------------- Step 2: Configure WAL replication --------------------- #
+# wal_level=replica   - enables WAL logs needed for streaming replication
+# max_wal_senders=3   - max number of replicas that can connect
+# hot_standby=on      - allows replica to accept read-only queries
 echo "Configuring replication settings..."
 cat >> "$PGDATA/postgresql.conf" << EOF
 wal_level = replica
@@ -11,8 +17,9 @@ max_wal_senders = 3
 hot_standby = on
 EOF
 
-## Creates the replication user for the primary database
-echo "Creating replication user..."
+# --------------- Step 3: Create replication user --------------------- #
+# This user has ONLY the REPLICATION privilege — it cannot read or write data.
+# The replica uses this user to authenticate and stream WAL changes from primary.echo "Creating replication user..."
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<-SQL
   DO \$\$
   BEGIN
