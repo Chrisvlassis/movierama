@@ -248,15 +248,15 @@ resource "kubernetes_stateful_set" "postgres_replica" {
         "bash", "-c",
         <<-EOF
             set -euo pipefail
-            until pg_isready -h postgres-primary.movierama.svc.cluster.local -p 5432; do
+            until pg_isready -h postgres-primary.movierama.svc.cluster.local -p 5432; do # wait for the primary database to be ready
             echo "Waiting for primary to be ready..."
             sleep 2
             done
             echo "Primary is ready, starting base backup..."
             rm -rf /var/lib/postgresql/data/*
             PGPASSWORD="$REPLICATION_PASSWORD" pg_basebackup \
-            -h postgres-primary.movierama.svc.cluster.local \
-            -U "$REPLICATION_USER" \
+            -h postgres-primary.movierama.svc.cluster.local \ # connect to the primary database
+            -U "$REPLICATION_USER" \ # use the replication user
             -D /var/lib/postgresql/data \
             -Fp -Xs -R -P
             echo "Base backup complete"
