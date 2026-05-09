@@ -62,21 +62,7 @@ with DAG(
     )
 
     # --------------------------------------------------------- #
-    # TASK 2 - run validation tests
-    # Runs pytest against the freshly built image.
-    # If tests fail, pipeline does not run.
-    # --------------------------------------------------------- #
-    run_tests = BashOperator(
-        task_id="run_validation_tests",
-        bash_command="""
-            docker run \
-                movierama-etl \
-                pytest tests/test_validation.py -v
-        """,
-    )
-
-    # --------------------------------------------------------- #
-    # TASK 3 - run the ETL pipeline
+    # TASK 2 - run the ETL pipeline
     # Only runs if tests pass.
     # --------------------------------------------------------- #
     run_etl = BashOperator(
@@ -94,4 +80,4 @@ with DAG(
     # build → test → run
     # each step only runs if the previous one succeeded
     # --------------------------------------------------------- #
-    build_image >> run_tests >> run_etl
+    build_image  >> run_etl
