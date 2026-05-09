@@ -203,8 +203,6 @@ Tests cover:
 - Schema evolution: new columns ignored, missing columns filled with null
 - Edge cases: empty DataFrame, all invalid records
 
-> **Note:** Given more time we would also add more data quality validations such as rating range checks (0-5), duplicate detection, and referential integrity between movies and ratings.
-
 ### Schema Evolution
 The pipeline handles schema evolution gracefully:
 - **New column appears** → logged as warning, ignored
@@ -344,7 +342,6 @@ ls data/streaming/output/
 - More data quality validations (rating range, duplicate detection, referential integrity)
 - Additional SparkSQL transformations (trending movies, user behaviour analysis)
 - Observability: pipeline metrics, alerting on quarantine threshold
-- CI/CD pipeline to automatically run tests on every push
 
 ### Observability
 The pipeline currently provides basic observability through:
