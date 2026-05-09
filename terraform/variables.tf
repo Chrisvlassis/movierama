@@ -1,6 +1,11 @@
-# Database Configuration
-# postgres_user  - admin user for the application
-# replication_user - used ONLY by the replica to stream changes from the primary
+# ── Variables ─────────────────────────────────────────────────────────────────
+# All configurable values for the PostgreSQL setup.
+#
+# Users:
+#   postgres_user    → admin user for the application (read + write)
+#   replication_user → used ONLY by the replica to stream changes from primary
+#                      has NO access to application data, only REPLICATION privilege
+# ─────────────────────────────────────────────────────────────────────────────
 
 variable "postgres_version" {
   description = "PostgreSQL Docker image version"
@@ -9,13 +14,13 @@ variable "postgres_version" {
 }
 
 variable "postgres_db" {
-  description = "Name of the default database"
+  description = "Name of the database"
   type        = string
   default     = "movierama"
 }
 
 variable "postgres_user" {
-  description = "PostgreSQL admin username"
+  description = "PostgreSQL admin username (used by the application)"
   type        = string
   default     = "movierama"
 }
@@ -28,7 +33,7 @@ variable "postgres_password" {
 }
 
 variable "replication_user" {
-  description = "PostgreSQL replication username"
+  description = "PostgreSQL replication username (used only by the replica)"
   type        = string
   default     = "replicator"
 }

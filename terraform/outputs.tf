@@ -1,10 +1,15 @@
+# ── Outputs ───────────────────────────────────────────────────────────────────
+# These values are printed after terraform apply.
+# Useful for connecting to the database or configuring the application.
+# ─────────────────────────────────────────────────────────────────────────────
+
 output "primary_host" {
-  description = "PostgreSQL primary hostname"
+  description = "PostgreSQL primary hostname (reads + writes)"
   value       = "postgres-primary.movierama.svc.cluster.local"
 }
 
 output "replica_host" {
-  description = "PostgreSQL replica hostname"
+  description = "PostgreSQL replica hostname (reads only)"
   value       = "postgres-replica.movierama.svc.cluster.local"
 }
 

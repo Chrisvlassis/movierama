@@ -1,4 +1,8 @@
-# Get k8s provider
+# ── Terraform Configuration ───────────────────────────────────────────────────
+# Defines the required providers and the Kubernetes connection.
+# We use Minikube as our local Kubernetes cluster.
+# ─────────────────────────────────────────────────────────────────────────────
+
 terraform {
   required_providers {
     kubernetes = {
@@ -12,5 +16,5 @@ terraform {
 
 provider "kubernetes" {
   config_path    = "~/.kube/config"
-  config_context = "minikube" # i will use minikube for k8s 
+  config_context = "minikube"
 }
