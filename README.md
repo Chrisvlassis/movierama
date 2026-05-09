@@ -86,7 +86,6 @@ kubectl exec -it postgres-replica-0 -n movierama -- psql -U movierama -d moviera
 
 ### Design Decisions
 - Used **StatefulSets** instead of Deployments because databases need stable identity and persistent storage
-- Used **Headless Services** for stable DNS names between pods
 - Used **init container** on replica to run `pg_basebackup` before PostgreSQL starts
 - Replication user has only `REPLICATION` privilege — follows least privilege principle
 - Passwords stored in Kubernetes **Secrets**, never hardcoded
