@@ -1,4 +1,6 @@
-# i want 2 users. one for the main and one for the replica. In a sense we dont want the same 'person' have access to both databases
+# Database Configuration
+# postgres_user  - admin user for the application
+# replication_user - used ONLY by the replica to stream changes from the primary
 
 variable "postgres_version" {
   description = "PostgreSQL Docker image version"
