@@ -250,3 +250,20 @@ def test_no_schema_changes(spark):
 
     assert result_df.columns == expected_columns
     assert result_df.count() == 1
+
+def test_exact_duplicates_removed(spark):
+    """
+    Covers: dropDuplicates() in validate_and_split.
+    Two identical rows → only one should pass through.
+    """
+    data = [
+        ("1", "4.5", "2010-07-16", "2024-01-01 10:00:00", "Inception"),
+        ("1", "4.5", "2010-07-16", "2024-01-01 10:00:00", "Inception"),  # exact duplicate!
+    ]
+    df = spark.createDataFrame(data, schema=STRING_SCHEMA)
+
+    valid_df, failed_df = validate_and_split(df, FULL_SCHEMA, "test")
+
+    # only 1 record should pass through, duplicate removed
+    assert valid_df.count() == 1
+    assert failed_df.count() == 0
