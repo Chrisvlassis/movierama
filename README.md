@@ -254,7 +254,6 @@ cp .env.example .env
 **2. Edit `.env` and fill in your paths:**
 ```
 AIRFLOW_UID=501                                    # run: id -u
-MOVIERAMA_ETL_PATH=/your/full/path/to/movierama/etl
 MOVIERAMA_DATA_PATH=/your/full/path/to/movierama/etl/data
 ```
 

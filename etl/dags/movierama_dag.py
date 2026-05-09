@@ -22,13 +22,6 @@ default_args = {
     "retry_delay": timedelta(minutes=5) # wait 5 mins before retry
 }
 
-# path to etl folder on your Mac
-# used for building the image and mounting data
-ETL_PATH = os.environ.get(
-    "MOVIERAMA_ETL_PATH",
-    ""
-)
-
 # path to data folder on your Mac
 DATA_PATH = os.environ.get(
     "MOVIERAMA_DATA_PATH",
@@ -50,20 +43,7 @@ with DAG(
 ) as dag:
 
     # --------------------------------------------------------- #
-    # TASK 1 - build latest Docker image
-    # Always builds fresh image before running
-    # so we always use the latest code
-    # --------------------------------------------------------- #
-    build_image = BashOperator(
-        task_id="build_docker_image",
-        bash_command="""
-            docker build -t movierama-etl /opt/movierama/etl
-        """,
-    )
-
-    # --------------------------------------------------------- #
     # TASK 2 - run the ETL pipeline
-    # Only runs if tests pass.
     # --------------------------------------------------------- #
     run_etl = BashOperator(
         task_id="run_etl_pipeline",
@@ -76,8 +56,6 @@ with DAG(
     )
 
     # --------------------------------------------------------- #
-    # TASK ORDER
-    # build → test → run
-    # each step only runs if the previous one succeeded
+    # run the ETL pipeline
     # --------------------------------------------------------- #
-    build_image  >> run_etl
+    run_etl
