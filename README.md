@@ -91,6 +91,10 @@ kubectl exec -it postgres-replica-0 -n movierama -- psql -U movierama -d moviera
 - Replication user has only `REPLICATION` privilege — follows least privilege principle
 - Passwords stored in Kubernetes **Secrets**, never hardcoded
 
+### What i would do better:
+- Better password setup: Currently the password is hardcoded into the variables and the provided into the k8s secrets. We should import it from somewhere else like a Vault
+- Better user handling: Currently any user in primary replicates to the replica. So, if i want to create a user only in replica i cannot. By configuring the pg_hba.conf i could have a user able to connect only to the replica (basically it would created in both pods but the access would be only in the replica)
+
 ---
 
 ## Task 1b — Web Application
