@@ -1,7 +1,4 @@
-# ── Terraform Configuration ───────────────────────────────────────────────────
-# Defines the required providers and the Kubernetes connection.
-# We use Minikube as our local Kubernetes cluster.
-# ─────────────────────────────────────────────────────────────────────────────
+# Terraform configuration: defines providers and connects to the Minikube cluster.
 
 terraform {
   required_providers {

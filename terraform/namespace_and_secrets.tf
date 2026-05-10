@@ -1,24 +1,16 @@
-# ── Namespace, Secrets & ConfigMaps ──────────────────────────────────────────
-#
-# This file sets up the foundational Kubernetes resources:
-#
-#   1. Namespace     → isolates all movierama resources in their own namespace
-#   2. Secret        → stores passwords securely (never hardcoded in pod specs)
-#   3. ConfigMap     → pg_hba.conf: controls who can connect to PostgreSQL
-#   4. ConfigMap     → primary.sh:  init script that runs on the primary at first start
-#
-# ─────────────────────────────────────────────────────────────────────────────
+# Foundational Kubernetes resources:
+#   - Namespace  → isolates all movierama resources
+#   - Secret     → stores admin and replication passwords
+#   - ConfigMap  → pg_hba.conf (PostgreSQL authentication rules)
+#   - ConfigMap  → primary.sh (init script that runs on the primary's first start)
 
-# ── 1. Namespace ──────────────────────────────────────────────────────────────
 resource "kubernetes_namespace" "movierama" {
   metadata {
     name = "movierama"
   }
 }
 
-# ── 2. Secret ─────────────────────────────────────────────────────────────────
-# Stores the admin and replication passwords.
-# Pods reference this secret instead of having passwords written directly in their spec.
+# Pods reference this Secret instead of having passwords hardcoded in their spec.
 resource "kubernetes_secret" "postgres" {
   metadata {
     name      = "postgres-secret"
@@ -31,15 +23,11 @@ resource "kubernetes_secret" "postgres" {
   }
 }
 
-# ── 3. ConfigMap: pg_hba.conf ─────────────────────────────────────────────────
-# pg_hba.conf is PostgreSQL's authentication file.
-# It controls who can connect, from where, and how they must authenticate.
-# PostgreSQL reads this file on every new incoming connection.
-#
-# Rules (read top to bottom, first match wins):
-#   - Local connections    → trust (no password needed, internal only)
-#   - Replication user     → must use scram-sha-256 password (for replica streaming)
-#   - All other users      → must use scram-sha-256 password
+# pg_hba.conf controls who can connect to PostgreSQL and how they authenticate.
+# Rules are read top to bottom and the first match wins:
+#   - local connections      → trust (no password needed)
+#   - replication user       → password (used by the replica)
+#   - all other users        → password
 resource "kubernetes_config_map" "postgres_config" {
   metadata {
     name      = "postgres-config"
@@ -57,10 +45,8 @@ EOF
   }
 }
 
-# ── 4. ConfigMap: primary.sh ──────────────────────────────────────────────────
-# Init script that runs once on the primary pod's first start.
-# It configures WAL replication and creates the replication user.
-# See scripts/primary.sh for details.
+# Init script that runs once on the primary's first start.
+# Configures WAL replication and creates the replication user (see scripts/primary.sh).
 resource "kubernetes_config_map" "postgres_init_script" {
   metadata {
     name      = "postgres-init-script"

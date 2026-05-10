@@ -1,7 +1,5 @@
-# ── Outputs ───────────────────────────────────────────────────────────────────
-# These values are printed after terraform apply.
-# Useful for connecting to the database or configuring the application.
-# ─────────────────────────────────────────────────────────────────────────────
+# Values printed after `terraform apply`.
+# Useful for connecting to the database from the application.
 
 output "primary_host" {
   description = "PostgreSQL primary hostname (reads + writes)"
@@ -22,8 +20,6 @@ output "database_user" {
   description = "Database admin user"
   value       = var.postgres_user
 }
-
-# should i add the replica user also?
 
 output "database_port" {
   description = "PostgreSQL port"

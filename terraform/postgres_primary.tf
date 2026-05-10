@@ -1,24 +1,7 @@
-# ── PostgreSQL Primary ────────────────────────────────────────────────────────
-#
-# The primary is the main PostgreSQL instance.
-# It accepts both reads and writes from the application.
-#
-# Resources:
-#   1. StatefulSet → runs the primary PostgreSQL pod
-#   2. Service     → headless service that gives the pod a stable DNS name
-#                    so the replica can always find it at:
-#                    postgres-primary.movierama.svc.cluster.local
-#
-# On first start, primary.sh runs and:
-#   - Loads pg_hba.conf
-#   - Configures WAL replication settings
-#   - Creates the replication user
-# ─────────────────────────────────────────────────────────────────────────────
+# PostgreSQL primary: accepts both reads and writes from the application.
+# Defined as a StatefulSet (stable pod name + persistent disk) plus a headless
+# Service so the replica can reach it at: postgres-primary.movierama.svc.cluster.local
 
-# ── 1. StatefulSet ────────────────────────────────────────────────────────────
-# StatefulSet is used instead of Deployment because:
-#   - Databases need a stable, predictable pod name (postgres-primary-0)
-#   - Data must persist across pod restarts (via PVC)
 resource "kubernetes_stateful_set" "postgres_primary" {
   metadata {
     name      = "postgres-primary"
@@ -53,14 +36,12 @@ resource "kubernetes_stateful_set" "postgres_primary" {
           name  = "postgres"
           image = "postgres:${var.postgres_version}"
 
-          # ── Database config ────────────────────────────────────────────────
           env {
             name  = "POSTGRES_DB"
             value = var.postgres_db
           }
 
-          # ── Admin user ─────────────────────────────────────────────────────
-          # Used by the application to read and write data
+          # Admin user: used by the application to read and write data.
           env {
             name  = "POSTGRES_USER"
             value = var.postgres_user
@@ -76,8 +57,7 @@ resource "kubernetes_stateful_set" "postgres_primary" {
             }
           }
 
-          # ── Replication user ───────────────────────────────────────────────
-          # Used only by the replica to stream WAL changes from this primary.
+          # Replication user: used only by the replica to stream WAL changes.
           # Created by primary.sh on first start.
           env {
             name  = "REPLICATION_USER"
@@ -94,23 +74,20 @@ resource "kubernetes_stateful_set" "postgres_primary" {
             }
           }
 
-          # ── Volume mounts ──────────────────────────────────────────────────
-
-          # pg_hba.conf: mounted at /mnt (read-only).
-          # primary.sh copies it into PGDATA on first start.
+          # pg_hba.conf is mounted read-only; primary.sh copies it into PGDATA.
           volume_mount {
             name       = "postgres-config"
             mount_path = "/mnt/pg_hba.conf"
             sub_path   = "pg_hba.conf"
           }
 
-          # Persistent storage for database data
+          # Persistent storage so data survives pod restarts.
           volume_mount {
             name       = "postgres-data"
             mount_path = "/var/lib/postgresql/data"
           }
 
-          # Init script: runs once on first start via docker-entrypoint-initdb.d
+          # Init script: runs once on first start.
           volume_mount {
             name       = "init-script"
             mount_path = "/docker-entrypoint-initdb.d/primary.sh"
@@ -118,7 +95,6 @@ resource "kubernetes_stateful_set" "postgres_primary" {
           }
         }
 
-        # ── Volumes ────────────────────────────────────────────────────────
         volume {
           name = "postgres-config"
           config_map {
@@ -136,9 +112,7 @@ resource "kubernetes_stateful_set" "postgres_primary" {
       }
     }
 
-    # ── Persistent Volume Claim ────────────────────────────────────────────────
-    # Requests a 1Gi disk for the primary's data.
-    # Data survives pod restarts because it lives on this disk, not inside the pod.
+    # 1Gi disk for the primary's data, kept across pod restarts.
     volume_claim_template {
       metadata {
         name = "postgres-data"
@@ -156,10 +130,7 @@ resource "kubernetes_stateful_set" "postgres_primary" {
   }
 }
 
-# ── 2. Service ────────────────────────────────────────────────────────────────
-# Headless service (cluster_ip = "None") gives the primary pod a stable DNS name:
-#   postgres-primary.movierama.svc.cluster.local
-# The replica uses this DNS name to connect for pg_basebackup and WAL streaming.
+# Headless service: gives the primary a stable DNS name used by the replica.
 resource "kubernetes_service" "postgres_primary" {
   metadata {
     name      = "postgres-primary"

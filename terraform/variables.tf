@@ -1,11 +1,8 @@
-# ── Variables ─────────────────────────────────────────────────────────────────
-# All configurable values for the PostgreSQL setup.
+# Variables for the PostgreSQL setup.
 #
-# Users:
-#   postgres_user    → admin user for the application (read + write)
-#   replication_user → used ONLY by the replica to stream changes from primary
-#                      has NO access to application data, only REPLICATION privilege
-# ─────────────────────────────────────────────────────────────────────────────
+# Two users are defined:
+#   - postgres_user    → admin user used by the application (read + write)
+#   - replication_user → used only by the replica to stream changes from the primary
 
 variable "postgres_version" {
   description = "PostgreSQL Docker image version"
