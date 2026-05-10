@@ -48,7 +48,9 @@ def validate_and_split(df, schema, dataset_name):
     if duplicates_removed > 0:
         print(f"[VALIDATION] {dataset_name}: removed {duplicates_removed} exact duplicate rows")
 
-
+    # ------------------------------------------------- #
+    # VALIDATE EACH COLUMN BASED ON EXPECTED TYPE
+    # ------------------------------------------------- #
     # start with all records marked as valid. This is a boolean column that will be used to mark if the record is valid or not.
     df = df.withColumn("_is_valid", F.lit(True))
     df = df.withColumn("_invalid_reason", F.lit(""))
