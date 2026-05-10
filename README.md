@@ -138,13 +138,6 @@ curl http://<url>/health
 curl http://<url>/ready
 ```
 
-### Design Decisions
-- Used **Deployment** (not StatefulSet) because the web app is stateless
-- Used **NodePort** service for local Minikube access
-- **livenessProbe** on `/health` → Kubernetes restarts pod if app crashes
-- **readinessProbe** on `/ready` → Kubernetes stops traffic if DB is unreachable
-- DB password injected from existing **Secret** created in Task 1a
-
 ---
 
 ## Task 2 — Spark ETL Pipeline
