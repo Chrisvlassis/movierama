@@ -333,7 +333,7 @@ ls data/streaming/output/
 
 ### What Would Be Added Given More Time
 - Unit tests for `extract.py`, `transform.py` and `load.py`
-- More data quality validations (rating range)
+- More data quality validations
 - Additional SparkSQL transformations (trending movies, user behaviour analysis)
 - Observability: pipeline metrics, alerting on quarantine threshold
 
