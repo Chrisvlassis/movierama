@@ -226,11 +226,7 @@ The ETL pipeline is orchestrated using **Apache Airflow**. It runs automatically
 
 ### DAG Flow
 ```
-Task 1: build_docker_image   → builds latest movierama-etl image
-        ↓
-Task 2: run_validation_tests → runs pytest against latest code
-        ↓ (only if tests pass)
-Task 3: run_etl_pipeline     → runs the ETL pipeline
+Task 1: run_etl_pipeline     → runs the ETL pipeline
 ```
 
 If any task fails, the next task does not run. Airflow retries once after 5 minutes.
