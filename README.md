@@ -137,6 +137,10 @@ minikube service movierama-app -n movierama --url
 curl http://<url>/health
 curl http://<url>/ready
 ```
+**6b. OR use the k8s logs:**
+```bash
+kubectl logs -n movierama deployment/movierama-app
+```
 
 ---
 
